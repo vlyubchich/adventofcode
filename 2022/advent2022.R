@@ -153,5 +153,19 @@ res <- sapply(X, function(x) x[1])
 paste(res, collapse = "")
 # WJVRLSJJT
 
-
-
+# Day 6 ----
+# https://adventofcode.com/2022/day/6
+# https://adventofcode.com/2022/day/6#part2
+X <- readLines("./2022/data/input6.txt")
+X <- unlist(strsplit(X, ""))
+i <- 0 # identified length
+nn <- 14 # needed length: 4 or 14
+n <- nn # running place in the sequence
+while (i < nn) {
+    x <- X[(n - nn + 1):n]
+    i <- length(unique(x))
+    n <- n + 1
+}
+n - 1
+# [1] 1757
+# [1] 2950
