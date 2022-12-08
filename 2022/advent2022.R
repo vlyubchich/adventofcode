@@ -169,3 +169,93 @@ while (i < nn) {
 n - 1
 # [1] 1757
 # [1] 2950
+
+
+# Day 7 ----
+# https://adventofcode.com/2022/day/7
+X <- readLines("./2022/data/input7.txt")
+library(stringr)
+DIR <- list()
+# Vector of list indices
+li <- 1
+listlevel <- paste0("[[", paste0(li, collapse = "]][["), "]]")
+command_i <- which(startsWith(X, "$"))
+command_text1 <- substr(X[command_i], 3, 4)
+command_text2 <- substring(X[command_i], 6)
+# table(command_text1)
+# table(command_text2)
+for (i in 2:length(command_i)) {
+    ci <- command_i[i]
+    ct1 <- command_text1[i]
+    ct2 <- command_text2[i]
+    if (ct1 == "ls") {
+        if (i == length(command_i)) {
+            last <- length(X)
+        } else {
+            last <- command_i[i + 1] - 1
+        }
+        elements <- X[(ci + 1):last]
+        tmp <- strsplit(elements, " ")
+        el_names <- sapply(tmp, function(x) x[2])
+        el_val <- lapply(tmp, function(x) {
+            if (grepl("\\d+", x[1])) {
+                as.numeric(x[1])
+            } else {
+                x[1]
+            }
+            })
+        names(el_val) <- el_names
+        eval(parse(text = paste0("DIR", listlevel, "<- el_val")))
+    }
+
+    if (ct1 == "cd" & ct2 == "..") {
+        li <- li[-length(li)]
+        listlevel <- paste0("[[", paste0(li, collapse = "]][["), "]]")
+    }
+
+    if (ct1 == "cd" & ct2 != "..") {
+        ind <- which(names(eval(parse(text = paste0("DIR", listlevel)))) == ct2)
+        li <- c(li, ind)
+        listlevel <- paste0("[[", paste0(li, collapse = "]][["), "]]")
+    }
+}
+DIR #<- DIR[[1]]
+
+# maxDepth <- function(x, depth = 0) {
+#     if (is.list(x)) max(sapply(x, maxDepth, depth+1))
+#     else depth
+# }
+#
+#
+#
+# lapply(DIR, function(D) {
+#     sum(D, na.rm = TRUE)
+# })
+#
+# names(DIR[[1]])
+#
+#
+# # X0 = iris
+# # li0 = c(1, 2)
+# # listlevel <- paste0("[[", paste0(li0, collapse = "]][["), "]]")
+# # eval(parse(text = paste0("X0", listlevel, "<-", 123)))
+#
+#
+# assign(eval(parse(text = paste0("X0", listlevel))), 70)
+#
+# get(paste0("X0", listlevel))
+# eval(parse(text = paste0("X0", listlevel)))
+#
+# X0[[1]][[2]]
+
+
+
+
+
+
+
+
+
+
+
+
